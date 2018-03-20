@@ -24,8 +24,9 @@ app.use(function (req, res, next) {
 });
 
 app.use(function (req, res, next) {
-  res.render('maintenance.hbs');
-})
+	// res.render('maintenance.hbs');
+	next();
+});
 
 hbs.registerHelper('getCurrentYear', function () {
 	return new Date().getFullYear();
@@ -57,11 +58,21 @@ app.get('/home', function (req, res) {
 	});
 });
 
+app.get('/projects', function (req, res) {
+	res.render('projects.hbs', {
+		pageTitle: 'Home Page',
+		welcomeMessage: 'Project!',
+	});
+});
+
+
 app.get('/bad', function (req, res) {
 	res.send({
 		errorMessage: 'bad request!!',
 	});
 });
+
+
 
 app.listen(port, function () {
 	console.log(`server is up:${port}`);
