@@ -3,9 +3,9 @@ const { MongoClient, ObjectID } = require('mongodb');
 MongoClient.connect('mongodb://localhost:27017/test').then(function (db) {
 	console.log('Connected to mongoDB');
 
-// deletemany
-// deleteone
-// findOneandDelete
+	// deletemany
+	// deleteone
+	// findOneandDelete
 
 	// db.collection('Todos').deleteMany({
 	// 	text: 'eat lunch',
