@@ -37,8 +37,6 @@ MongoClient.connect('mongodb://localhost:27017/test').then(function (db) {
 			console.log('unable to get Todos ', error);
 		});
 
-
-
 	db.close();
 })
 	.catch(function (err) {
