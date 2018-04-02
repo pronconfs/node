@@ -1,5 +1,5 @@
-let express = require('express');
-let bodyParser = require('body-parser');
+const express = require('express');
+const bodyParser = require('body-parser');
 
 const { mongoose } = require('./db/mongoose.js');
 const { Todo } = require('./models/todo.js');
@@ -23,9 +23,22 @@ app.post('/todos', function (req, res) {
 	});
 });
 
+app.get('/todos', function (req, res) {
+	Todo.find({}).then(function (todosRes) {
+		res.send({
+			todos: todosRes,
+			resultado: 'ok',
+		});
+	}, function (e) {
+		res.status(400).send(e);
+	});
+});
+
 app.listen(3001, function () {
 	console.log('started on port 3001');
 });
+
+module.exports = { app };
 
 // let user = new User({
 // 	email: 'proncon@gmail.com',
