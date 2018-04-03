@@ -4,11 +4,24 @@ const expect = require('expect');
 const { app } = require('./../server');
 const { Todo } = require('./../models/todo');
 
+const todos = [{
+	text: 'First test todo',
+}, {
+	text: 'Second test todo',
+}];
+
 let text = 'test todo text!!!';
 
 beforeEach(function (done) {
-	Todo.remove({ text: text }).then(function (deleted) {
-		done();
+	// Todo.remove({ text: text }).then(function (deleted) {
+	// 	done();
+	// }).catch(function (e) {
+	// 	done(e);
+	// });
+	Todo.remove({}).then(function () {
+		Todo.insertMany(todos).then(function () {
+			done();
+		});
 	}).catch(function (e) {
 		done(e);
 	});
@@ -47,12 +60,39 @@ describe('POST /todos', function () {
 			.expect(400)
 			.expect(function (res) {
 				// console.log(res.statusCode);
-				done();
+				// done();
 			})
 			.end(function (err, res) {
 				if (err) {
 					return done(err);
 				}
       });
+
+      Todo.find({}).then(function (todos) {
+        expect(todos).toExist();
+        expect(todos.length).toBe(2);
+        done();
+      }).catch(function (e) {
+        done(e);
+      });
   });      
+});
+
+describe('GET /todos', function () {
+	it('should get all todos', function (done) {
+		request(app)
+			.get('/todos')
+			.expect(200)
+			.expect(function (res) {
+        expect(res.body.todos.length).toBe(2);
+        done();
+				//expect(res.body).toBe(todos);
+			})
+			.end(function (err, res) {
+				if (err) {
+					return done(err);
+        }
+      });
+
+  });
 });
