@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const {ObjectID} = require('mongodb');
+
 const { mongoose } = require('./db/mongoose.js');
 const { Todo } = require('./models/todo.js');
 const { User } = require('./models/user.js');
@@ -34,8 +36,30 @@ app.get('/todos', function (req, res) {
 	});
 });
 
+app.get('/todos/:id', function (req, res) {
+	var id = req.params.id;
+	//res.send(id);
+
+	if (!ObjectID.isValid(id)) {
+		return res.status(404).send();
+	}
+
+	Todo.findById(id).then( function(todo) {
+		if (!todo) {
+			return res.status(404).send();
+		}
+		res.send ({todo});
+	})
+	.catch(function(e) {
+		return res.status(404).send();
+	});
+}, 
+function (e) {
+	return res.send(e);
+});
+
 app.listen(3001, function () {
-	console.log('started on port 3001');
+	console.log('started on port 3001!!');
 });
 
 module.exports = { app };
