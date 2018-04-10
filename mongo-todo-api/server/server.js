@@ -51,9 +51,9 @@ app.get('/todos/:id', function (req, res) {
 		}
 		res.send ({todo});
 	})
-	.catch(function(e) {
-		return res.status(404).send();
-	});
+		.catch(function(e) {
+			return res.status(404).send();
+		});
 }, 
 function (e) {
 	return res.send(e);
@@ -73,9 +73,9 @@ app.delete('/todos/:id', function (req, res) {
 		}
 		res.send ({todo});
 	})
-	.catch(function(e) {
-		return res.status(404).send();
-	});
+		.catch(function(e) {
+			return res.status(404).send();
+		});
 }, 
 function (e) {
 	return res.send(e);
