@@ -1,52 +1,46 @@
+require('./config/config.js');
+
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const {
-	ObjectID
-} = require('mongodb');
+const { ObjectID } = require('mongodb');
 
-const {
-	mongoose
-} = require('./db/mongoose.js');
-const {
-	Todo
-} = require('./models/todo.js');
-const {
-	User
-} = require('./models/user.js');
+const { mongoose } = require('./db/mongoose.js');
+const { Todo } = require('./models/todo.js');
+const { User } = require('./models/user.js');
 
 const app = express();
 const port = process.env.PORT || 3001;
 
 app.use(bodyParser.json());
 
-app.post('/todos', function (req, res) {
+app.post('/todos', function(req, res) {
 	const todo = new Todo({
 		text: req.body.text,
-		completed: req.body.completed
+		completed: req.body.completed,
 	});
 	console.log(req.body);
 
 	todo.save().then(
-		function (doc) {
+		function(doc) {
 			res.send(doc);
 		},
-		function (e) {
+		function(e) {
 			res.status(400).send(e);
 		}
 	);
 });
 
-app.get('/todos', function (req, res) {
+app.get('/todos', function(req, res) {
 	Todo.find({}).then(
-		function (todosRes) {
+		function(todosRes) {
 			res.send({
 				todos: todosRes,
 				resultado: 'ok',
 			});
 		},
-		function (e) {
+		function(e) {
 			res.status(400).send(e);
 		}
 	);
@@ -54,7 +48,7 @@ app.get('/todos', function (req, res) {
 
 app.get(
 	'/todos/:id',
-	function (req, res) {
+	function(req, res) {
 		let id = req.params.id;
 		// res.send(id);
 
@@ -63,24 +57,24 @@ app.get(
 		}
 
 		Todo.findById(id)
-			.then(function (todo) {
+			.then(function(todo) {
 				if (!todo) {
 					return res.status(404).send();
 				}
 				res.send({
-					todo
+					todo,
 				});
 			})
-			.catch(function (e) {
+			.catch(function(e) {
 				return res.status(404).send();
 			});
 	},
-	function (e) {
+	function(e) {
 		return res.send(e);
 	}
 );
 
-app.delete('/todos/:id', function (req, res) {
+app.delete('/todos/:id', function(req, res) {
 	let id = req.params.id;
 	// res.send(id);
 
@@ -89,22 +83,22 @@ app.delete('/todos/:id', function (req, res) {
 	}
 
 	Todo.findByIdAndRemove(id)
-		.then(function (todo) {
+		.then(function(todo) {
 			if (!todo) {
 				return res.status(404).send();
 			}
 			res.send({
-				todo
+				todo,
 			});
 		})
-		.catch(function (e) {
+		.catch(function(e) {
 			return res.status(404).send();
 		});
 });
 
-app.patch('/todos/:id', function (req, res) {
+app.patch('/todos/:id', function(req, res) {
 	const id = req.params.id;
-	const body = _.pick(req.body, ["text", "completed"]);
+	const body = _.pick(req.body, ['text', 'completed']);
 
 	if (!ObjectID.isValid(id)) {
 		return res.status(404).send();
@@ -117,31 +111,35 @@ app.patch('/todos/:id', function (req, res) {
 		body.completedAt = null;
 	}
 
-	Todo.findByIdAndUpdate(id, {
-			$set: body
-		}, {
-			new: true
-		})
-		.then(function (todo) {
+	Todo.findByIdAndUpdate(
+		id,
+		{
+			$set: body,
+		},
+		{
+			new: true,
+		}
+	)
+		.then(function(todo) {
 			if (!todo) {
 				res.send.status(404).send();
 			} else {
 				res.send({
-					todo
+					todo,
 				});
 			}
 		})
-		.catch(function (e) {
+		.catch(function(e) {
 			return res.status(400).send();
 		});
 });
 
-app.listen(port, function () {
+app.listen(port, function() {
 	console.log(`started on port ${port}`);
 });
 
 module.exports = {
-	app
+	app,
 };
 
 // let user = new User({
